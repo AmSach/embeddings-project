@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            -webkit-app-region: drag;
+        }
+
+        .splash-container {
+            width: 440px;
+            height: 320px;
+            background: linear-gradient(145deg, #0a0a1a 0%, #111133 40%, #1a1a4a 100%);
+            border-radius: 20px;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            box-shadow: 
+                0 25px 80px rgba(0, 0, 0, 0.6),
+                0 0 60px rgba(99, 102, 241, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated gradient orb */
+        .splash-container::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulse-orb 3s ease-in-out infinite;
+        }
+
+        .splash-container::after {
+            content: '';
+            position: absolute;
+            bottom: -40px;
+            left: -40px;
+            width: 160px;
+            height: 160px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulse-orb 3s ease-in-out infinite reverse;
+        }
+
+        @keyframes pulse-orb {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+
+        .logo-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+            z-index: 1;
+            animation: float-icon 2s ease-in-out infinite;
+        }
+
+        @keyframes float-icon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        .splash-title {
+            color: #e2e8f0;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .splash-subtitle {
+            color: #94a3b8;
+            font-size: 11px;
+            z-index: 1;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .loading-bar-container {
+            width: 200px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 4px;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .loading-bar {
+            height: 100%;
+            width: 30%;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6, #a78bfa);
+            border-radius: 4px;
+            animation: loading-slide 1.5s ease-in-out infinite;
+        }
+
+        @keyframes loading-slide {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(400%); }
+        }
+
+        .loading-text {
+            color: #64748b;
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            z-index: 1;
+            animation: pulse-text 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-text {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .version-tag {
+            position: absolute;
+            bottom: 14px;
+            right: 18px;
+            color: #475569;
+            font-size: 9px;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="splash-container">
+        <div class="logo-icon">🧠</div>
+        <div class="splash-title">Semantic Research Assistant</div>
+        <div class="splash-subtitle">Initializing vector engine & backend services...</div>
+        <div class="loading-bar-container">
+            <div class="loading-bar"></div>
+        </div>
+        <div class="loading-text">Loading Models</div>
+        <div class="version-tag">v1.0.0</div>
+    </div>
+</body>
+</html>

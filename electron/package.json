@@ -1,0 +1,18 @@
+{
+  "name": "semantic-research-assistant",
+  "version": "1.0.0",
+  "description": "Multi-Domain Semantic Research Intelligence Assistant — Electron Desktop App",
+  "main": "main.js",
+  "author": "Research Lab",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0"
+  },
+  "dependencies": {
+    "electron-is-dev": "^2.0.0"
+  }
+}

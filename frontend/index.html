@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌐 Multi-Domain Research Intelligence Assistant</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Vis.js for Network Graph -->
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-area">
+                    <span class="pulse-orb"></span>
+                    <h2>Research Board</h2>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section-title">Research Board</div>
+                <a href="#" class="nav-item active" data-tab="notes">
+                    <i class="fa-regular fa-file-lines"></i>
+                    <span>Notion Workspace</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="sources">
+                    <i class="fa-solid fa-folder-open"></i>
+                    <span>Indexed Sources</span>
+                </a>
+
+                <div class="nav-section-title">Intelligence Services</div>
+                <a href="#" class="nav-item" data-tab="crawler">
+                    <i class="fa-solid fa-spider"></i>
+                    <span>Auto Crawler</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="graph">
+                    <i class="fa-solid fa-diagram-project"></i>
+                    <span>Knowledge Graph</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="debate">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>Clash & Debate Prep</span>
+                </a>
+
+                <div class="nav-section-title">Preferences</div>
+                <a href="#" class="nav-item" data-tab="settings">
+                    <i class="fa-solid fa-sliders"></i>
+                    <span>System Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="system-status">
+                    <span class="status-indicator online"></span>
+                    <span class="status-text">Local Model Active</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            
+            <!-- SECTION 1: NOTION WORKSPACE -->
+            <section id="tab-notes" class="tab-pane active">
+                <div class="workspace-layout">
+                    <!-- Notes List -->
+                    <div class="notes-sidebar">
+                        <div class="pane-header">
+                            <h3>Notion Notes</h3>
+                            <button id="btn-new-note" class="btn btn-sm btn-primary">
+                                <i class="fa-solid fa-plus"></i> New Page
+                            </button>
+                        </div>
+                        <div id="notes-list" class="item-list">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                    <!-- Note Editor -->
+                    <div class="note-editor-container">
+                        <div id="editor-placeholder" class="editor-placeholder">
+                            <i class="fa-regular fa-note-sticky"></i>
+                            <h4>Select a note to begin writing, or create a new page.</h4>
+                            <p>You can search research databases and inject formatted summaries directly into your drafts.</p>
+                        </div>
+                        <div id="editor-active" class="editor-active hidden">
+                            <div class="editor-header">
+                                <input type="text" id="note-title-input" placeholder="Untitled Page" class="title-input">
+                                <div class="editor-actions">
+                                    <button id="btn-save-note" class="btn btn-sm btn-success">
+                                        <i class="fa-regular fa-floppy-disk"></i> Save
+                                    </button>
+                                    <button id="btn-delete-note" class="btn btn-sm btn-danger">
+                                        <i class="fa-regular fa-trash-can"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="editor-tools">
+                                <button id="btn-open-inject" class="btn btn-xs btn-outline">
+                                    <i class="fa-solid fa-plus"></i> Inject Research Briefing
+                                </button>
+                                <span class="autosave-tag">Saved locally</span>
+                            </div>
+                            <textarea id="note-body-input" class="markdown-editor" placeholder="Write inside your Notion page. Markdown is supported..."></textarea>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2: INDEXED SOURCES -->
+            <section id="tab-sources" class="tab-pane">
+                <div class="pane-header-large">
+                    <div>
+                        <h1>Research Archive</h1>
+                        <p class="subtitle">Scored and semantic-chunked sources supporting debate synthesis.</p>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div class="stats-pills">
+                            <span class="stat-pill"><i class="fa-solid fa-book"></i> <span id="stat-sources">0</span> Sources</span>
+                            <span class="stat-pill"><i class="fa-solid fa-cubes"></i> <span id="stat-chunks">0</span> Chunks</span>
+                        </div>
+                        <button id="btn-export-full-dossier" class="btn btn-primary" style="white-space: nowrap;">
+                            <i class="fa-solid fa-file-export"></i> Export Full Dossier
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="sources-search-bar">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="sources-search-input" placeholder="Filter sources by domain, title, or category...">
+                </div>
+
+                <div id="sources-grid" class="sources-grid">
+                    <!-- Populated dynamically -->
+                </div>
+            </section>
+
+            <!-- SECTION 3: AUTO CRAWLER -->
+            <section id="tab-crawler" class="tab-pane">
+                <div class="pane-header-large">
+                    <div>
+                        <h1>Multi-Domain Discovery Engine</h1>
+                        <p class="subtitle">Recursive web expansion crawler powered by Crawl4AI & Playwright heuristics.</p>
+                    </div>
+                </div>
+
+                <div class="crawler-layout">
+                    <div class="crawler-settings">
+                        <h3>Scraping Parameters</h3>
+                        <div class="form-group">
+                            <label for="crawler-seeds-input">Research Seed Queries (One per line)</label>
+                            <textarea id="crawler-seeds-input" class="form-control seed-editor" rows="10"></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="crawler-limit">Max Pages to Index</label>
+                                <input type="number" id="crawler-limit" class="form-control" value="25" min="5" max="200">
+                            </div>
+                            <div class="form-group">
+                                <label for="crawler-depth">Crawl Depth Limit</label>
+                                <select id="crawler-depth" class="form-control">
+                                    <option value="1">Depth 1 (Seed Search + outbound links)</option>
+                                    <option value="0">Depth 0 (Seed Search results only)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button id="btn-start-crawl" class="btn btn-primary btn-block">
+                            <i class="fa-solid fa-play"></i> Start Research Discovery
+                        </button>
+                    </div>
+
+                    <div class="crawler-monitor">
+                        <div class="monitor-header">
+                            <h3>Live Console Output</h3>
+                            <div id="crawler-pulse-status" class="crawler-badge idle">Idle</div>
+                        </div>
+                        <div id="crawler-console" class="terminal-view">
+                            <div class="terminal-line system">Discovery Console initialized. Set seeds and click start.</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 4: KNOWLEDGE GRAPH -->
+            <section id="tab-graph" class="tab-pane">
+                <div class="pane-header-large">
+                    <div>
+                        <h1>Entity Relational Network</h1>
+                        <p class="subtitle">Interactive mapping of research entities based on chunk co-occurrence.</p>
+                    </div>
+                </div>
+
+                <div class="graph-viewport-container">
+                    <div id="knowledge-graph" class="graph-canvas">
+                        <!-- Vis.js will render here -->
+                    </div>
+                    <div class="graph-legend">
+                        <div class="legend-item"><span class="legend-dot country"></span> Country</div>
+                        <div class="legend-item"><span class="legend-dot region"></span> Region</div>
+                        <div class="legend-item"><span class="legend-dot group"></span> Military / Alliance</div>
+                        <div class="legend-item"><span class="legend-dot dispute"></span> Dispute / Topic</div>
+                        <div class="legend-item"><span class="legend-dot treaty"></span> Treaty / Legal</div>
+                        <div class="legend-item"><span class="legend-dot company"></span> Company</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 5: CLASH & DEBATE PREP -->
+            <section id="tab-debate" class="tab-pane">
+                <div class="pane-header-large">
+                    <div>
+                        <h1>Interactive Research Prep</h1>
+                        <p class="subtitle">Query-time intelligence: semantic search, trust reranking, and synthesis.</p>
+                    </div>
+                </div>
+
+                <div class="debate-dashboard">
+                    <!-- Column 1: Configuration -->
+                    <div class="debate-col debate-config-panel">
+                        <h3>Strategy Parameters</h3>
+                        <div class="form-group">
+                            <label for="debate-committee">Committee Name</label>
+                            <input type="text" id="debate-committee" class="form-control" value="UN Committee on Border Security" placeholder="e.g. UN Security Council, JCC Roman War Council">
+                        </div>
+                        <div class="form-group">
+                            <label for="debate-portfolio">Represented Portfolio</label>
+                            <input type="text" id="debate-portfolio" class="form-control" value="China" placeholder="e.g. China, Lucius Balbus, United States">
+                        </div>
+                        <div class="form-group">
+                            <label for="debate-agenda">Committee Agenda</label>
+                            <textarea id="debate-agenda" class="form-control" rows="4" placeholder="e.g. Sovereignty disputes and border fortification along the Line of Actual Control."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Debate Synthesis Output Mode</label>
+                            <div class="radio-cards">
+                                <label class="radio-card selected">
+                                    <input type="radio" name="debate-mode" value="speech" checked class="hidden">
+                                    <i class="fa-solid fa-microphone"></i>
+                                    <div>
+                                        <strong>Speech Brief</strong>
+                                        <p>90s formal debate GSL draft speech.</p>
+                                    </div>
+                                </label>
+                                <label class="radio-card">
+                                    <input type="radio" name="debate-mode" value="clash" class="hidden">
+                                    <i class="fa-solid fa-swords"></i>
+                                    <div>
+                                        <strong>Shield & Sword</strong>
+                                        <p>Defensive deflections + offensive clash points.</p>
+                                    </div>
+                                </label>
+                                <label class="radio-card">
+                                    <input type="radio" name="debate-mode" value="resolution" class="hidden">
+                                    <i class="fa-solid fa-file-signature"></i>
+                                    <div>
+                                        <strong>UN Clauses</strong>
+                                        <p>Formal preambulatory & operative clauses.</p>
+                                    </div>
+                                </label>
+                                <label class="radio-card">
+                                    <input type="radio" name="debate-mode" value="masterclass" class="hidden">
+                                    <i class="fa-solid fa-graduation-cap"></i>
+                                    <div>
+                                        <strong>Masterclass Course</strong>
+                                        <p>Basics-to-advanced study guide on the topic.</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <button id="btn-generate-debate" class="btn btn-primary btn-block">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Synthesize Strategy
+                        </button>
+                    </div>
+
+                    <!-- Column 2: Synthesized Output -->
+                    <div class="debate-col debate-output-panel">
+                        <div class="panel-header-action">
+                            <h3>Synthesized Directive</h3>
+                            <div class="action-buttons">
+                                <button id="btn-copy-synthesis" class="btn btn-xs btn-outline"><i class="fa-regular fa-copy"></i> Copy</button>
+                                <button id="btn-save-to-note" class="btn btn-xs btn-outline"><i class="fa-solid fa-file-import"></i> Save to Note</button>
+                                <button id="btn-export-pdf" class="btn btn-xs btn-outline hidden"><i class="fa-solid fa-file-pdf" style="color: #ef4444;"></i> PDF</button>
+                                <button id="btn-export-latex" class="btn btn-xs btn-outline hidden"><i class="fa-solid fa-code" style="color: #06b6d4;"></i> LaTeX</button>
+                            </div>
+                        </div>
+                        <div id="debate-synthesis-output" class="synthesis-textarea markdown-rendered">
+                            <div class="empty-state">
+                                <i class="fa-solid fa-brain-circuit"></i>
+                                <p>Provide details in the left panel and click "Synthesize Strategy" to generate speech, defenses, or resolution clauses.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 3: Ground Truth References -->
+                    <div class="debate-col debate-sources-panel">
+                        <div class="panel-header-action" style="margin-bottom: 4px;">
+                            <h3>Research Foundations</h3>
+                            <button id="btn-copy-raw-context" class="btn btn-xs btn-outline"><i class="fa-regular fa-clipboard"></i> Copy Chunks</button>
+                        </div>
+                        <p class="mini-subtitle">Retrieved text chunks (semantic similarity × source trust reranking)</p>
+                        <div id="debate-references-list" class="references-list">
+                            <div class="empty-state-small">No sources retrieved yet.</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 6: SYSTEM SETTINGS -->
+            <section id="tab-settings" class="tab-pane">
+                <div class="pane-header-large">
+                    <div>
+                        <h1>System Configurations</h1>
+                        <p class="subtitle">Configure AI model credentials and monitor vector hardware execution status.</p>
+                    </div>
+                </div>
+
+                <div class="settings-grid">
+                    <div class="settings-card">
+                        <h3>API Configuration</h3>
+                        <p class="card-subtitle">API keys are kept strictly in memory for the session and used for fast synthesis.</p>
+                        <div class="form-group">
+                            <label for="settings-gemini-key">Google Gemini API Key</label>
+                            <input type="password" id="settings-gemini-key" class="form-control" placeholder="AIzaSy...">
+                        </div>
+                        <div class="form-group">
+                            <label for="settings-openai-key">OpenAI API Key</label>
+                            <input type="password" id="settings-openai-key" class="form-control" placeholder="sk-proj-...">
+                        </div>
+                        <div class="form-group">
+                            <label for="settings-groq-key">Groq API Key (Free — recommended!)</label>
+                            <input type="password" id="settings-groq-key" class="form-control" placeholder="gsk_...">
+                            <small style="color: var(--text-muted); font-size: 0.75rem;">Get free key at <a href="https://console.groq.com" target="_blank" style="color: var(--accent-color);">console.groq.com</a> — Llama 3.3 70B, blazing fast</small>
+                        </div>
+                        <button id="btn-save-settings" class="btn btn-primary">
+                            <i class="fa-regular fa-floppy-disk"></i> Apply Keys
+                        </button>
+                    </div>
+
+                    <div class="settings-card">
+                        <h3>Execution Diagnostics</h3>
+                        <p class="card-subtitle">Information on hardware accelerators and database metrics.</p>
+                        <table class="settings-table">
+                            <tr>
+                                <td>Semantic Match Engine</td>
+                                <td id="diag-device" class="highlight">PyTorch CUDA (GPU)</td>
+                            </tr>
+                            <tr>
+                                <td>Embedding Dimension</td>
+                                <td>384 (MiniLM-L6-v2)</td>
+                            </tr>
+                            <tr>
+                                <td>Database Size</td>
+                                <td id="diag-db-size">0 MB</td>
+                            </tr>
+                            <tr>
+                                <td>Total Indexed Pages</td>
+                                <td id="diag-pages">0</td>
+                            </tr>
+                            <tr>
+                                <td>Total Semantic Chunks</td>
+                                <td id="diag-chunks">0</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- INJECT RESEARCH MODAL FOR THE EDITOR -->
+    <div id="modal-inject" class="modal-backdrop hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Semantic Search & Inject</h3>
+                <button id="btn-close-inject" class="btn-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="inject-search-box" style="display: flex; flex-direction: column; gap: 8px;">
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="inject-search-input" placeholder="Type a concept to retrieve from crawled research..." style="flex: 1;">
+                        <button id="btn-do-inject-search" class="btn btn-primary">Search</button>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <label for="inject-search-domain" style="font-size: 0.8rem; color: var(--text-muted);">Domain:</label>
+                        <select id="inject-search-domain" class="form-control" style="width: auto; padding: 4px 8px; height: auto; font-size: 0.8rem;">
+                            <option value="geopolitics" selected>Geopolitics</option>
+                            <option value="science">Science</option>
+                            <option value="history">History</option>
+                            <option value="business">Business</option>
+                            <option value="law">Law</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="inject-results-list" class="inject-results-list">
+                    <!-- Dynamic search chunks -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIEW SOURCE MODAL -->
+    <div id="modal-source-view" class="modal-backdrop hidden">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3 id="source-modal-title">Source Detail</h3>
+                <button id="btn-close-source-modal" class="btn-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="source-modal-meta">
+                    <span id="source-modal-trust" class="trust-badge">Trust: 1.0</span>
+                    <a id="source-modal-link" href="#" target="_blank" class="source-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Visit Site</a>
+                    <span id="source-modal-category" class="category-badge">Category</span>
+                </div>
+                <div id="source-modal-content" class="source-modal-content-area">
+                    <!-- Dynamic text and chunks -->
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,22 @@
+# Dependency directories
+node_modules/
+jspm_packages/
+web_modules/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+ENV/
+
+# Compiled Electron binary
+electron_binary/
+
+# Temp/logs
+*.log
+*.tmp
+.DS_Store
